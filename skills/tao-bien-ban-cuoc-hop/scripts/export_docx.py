@@ -1,18 +1,15 @@
 """
 Script: export_docx.py
-Mục đích: Chuyển đổi nội dung biên bản cuộc họp (từ JSON hoặc cấu trúc dữ liệu)
-sang file Word (.docx) chuẩn thể thức hành chính Việt Nam theo Nghị định 30/2020/NĐ-CP.
+Mục đích: Chuyển đổi nội dung biên bản cuộc họp sang file Word (.docx) chuẩn thể thức
+hành chính theo:
+- Quyết định số 1488/QĐ-ĐHYDCT (Quy định công tác văn thư ĐH Y Dược Cần Thơ - Mẫu 8)
+- Quyết định số 1494/QĐ-ĐHYDCT (Quy chế văn bản quản lý nội bộ ĐH Y Dược Cần Thơ - Phụ lục I)
+- Nghị định số 30/2020/NĐ-CP của Chính phủ.
 
-Quy chuẩn định dạng:
-- Khổ giấy: A4 (210 x 297 mm)
-- Căn lề (Margins):
-  + Lề trên: 20 mm (0.79 inch)
-  + Lề dưới: 20 mm (0.79 inch)
-  + Lề trái: 30 mm (1.18 inch)
-  + Lề phải: 20 mm (0.79 inch)
-- Phông chữ (Font): Times New Roman, Unicode tiếng Việt
-- Quốc hiệu / Tiêu ngữ & Đơn vị: Bảng không viền 2 cột căn chỉnh chuẩn
-- Chữ ký Thư ký / Chủ tọa: Bảng không viền 2 cột cuối văn bản
+Hỗ trợ các cấp:
+1. Trường Đại học Y Dược Cần Thơ (cấp Trường)
+2. Khoa Y - Bộ môn Mô phôi - Giải phẫu bệnh - Pháp Y (cấp Khoa & Bộ môn)
+3. Hỗ trợ 2 chữ ký (Thư ký - Chủ tọa/Trưởng Bộ môn) hoặc 3 chữ ký (Giao nhận, Kiểm tra sự cố thiết bị)
 """
 
 import sys
@@ -37,7 +34,7 @@ from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import nsdecls, qn
 
 def set_cell_margins(cell, top=100, bottom=100, left=100, right=100):
-    """Thiết lập padding cho ô trong bảng"""
+    """Thiết lập khoảng đệm (padding) trong ô bảng"""
     tcPr = cell._tc.get_or_add_tcPr()
     tcMar = OxmlElement('w:tcMar')
     for m, val in [('w:top', top), ('w:bottom', bottom), ('w:left', left), ('w:right', right)]:
@@ -48,7 +45,7 @@ def set_cell_margins(cell, top=100, bottom=100, left=100, right=100):
     tcPr.append(tcMar)
 
 def remove_table_borders(table):
-    """Xóa toàn bộ viền bảng để làm bố cục trình bày hành chính"""
+    """Ẩn viền bảng cho các khối căn chỉnh hành chính"""
     tblPr = table._tbl.tblPr
     borders = parse_xml(
         f'<w:tblBorders {nsdecls("w")}>\n'
@@ -63,7 +60,7 @@ def remove_table_borders(table):
     tblPr.append(borders)
 
 def style_data_table(table):
-    """Tạo kiểu cho bảng biểu dữ liệu (bảng phân công công việc)"""
+    """Kẻ viền bảng chuẩn cho bảng danh sách hoặc Action Items"""
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
     tblPr = table._tbl.tblPr
     borders = parse_xml(
@@ -81,24 +78,24 @@ def style_data_table(table):
 def create_administrative_minutes(data: dict, output_path: str):
     doc = Document()
     
-    # 1. Cấu hình trang & lề chuẩn Nghị định 30/2020/NĐ-CP
-    sections = doc.sections
-    for section in sections:
+    # 1. Cấu hình lề trang theo QĐ 1494/QĐ-ĐHYDCT & Nghị định 30/2020/NĐ-CP
+    # Lề trên: 20mm (0.79 in), Lề dưới: 20mm, Lề trái: 30mm (1.18 in), Lề phải: 20mm
+    for section in doc.sections:
         section.page_width = Inches(8.27)    # A4: 210mm
         section.page_height = Inches(11.69)  # A4: 297mm
-        section.top_margin = Inches(0.79)    # 20mm
-        section.bottom_margin = Inches(0.79) # 20mm
-        section.left_margin = Inches(1.18)   # 30mm
-        section.right_margin = Inches(0.79)  # 20mm
+        section.top_margin = Inches(0.79)
+        section.bottom_margin = Inches(0.79)
+        section.left_margin = Inches(1.18)
+        section.right_margin = Inches(0.79)
 
-    # Normal style
+    # Cài đặt phông chữ mặc định Times New Roman
     style = doc.styles['Normal']
     font = style.font
     font.name = 'Times New Roman'
     font.size = Pt(13)
     font.color.rgb = RGBColor(0, 0, 0)
 
-    # 2. Khối Tiêu đề Hành chính (Header Table)
+    # 2. Khối Header hành chính (2 cột)
     header_table = doc.add_table(rows=1, cols=2)
     header_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     remove_table_borders(header_table)
@@ -106,17 +103,18 @@ def create_administrative_minutes(data: dict, output_path: str):
     cell_left = header_table.cell(0, 0)
     cell_right = header_table.cell(0, 1)
     
-    cell_left.width = Inches(2.7)
-    cell_right.width = Inches(3.6)
+    cell_left.width = Inches(2.8)
+    cell_right.width = Inches(3.5)
 
-    # Cột trái: Tên cơ quan ban hành
+    # Cột trái: Cơ quan chủ quản / Trường / Khoa / Bộ môn
     p_cq = cell_left.paragraphs[0]
     p_cq.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_cq.paragraph_format.line_spacing = 1.15
     p_cq.paragraph_format.space_after = Pt(0)
     
     cq_chu_quan = data.get('co_quan_chu_quan', '').strip().upper()
-    ten_don_vi = data.get('ten_don_vi', '').strip().upper()
+    ten_khoa = data.get('ten_khoa', '').strip().upper()
+    ten_don_vi = data.get('ten_don_vi', 'TRƯỜNG ĐẠI HỌC Y DƯỢC CẦN THƠ').strip().upper()
     so_bb = data.get('so_bien_ban', '').strip()
 
     if cq_chu_quan:
@@ -124,11 +122,16 @@ def create_administrative_minutes(data: dict, output_path: str):
         run_cq.font.size = Pt(12)
         run_cq.font.bold = False
 
+    if ten_khoa:
+        run_k = p_cq.add_run(ten_khoa + '\n')
+        run_k.font.size = Pt(12)
+        run_k.font.bold = False
+
     run_dv = p_cq.add_run(ten_don_vi + '\n')
     run_dv.font.size = Pt(12)
     run_dv.font.bold = True
 
-    # Đường kẻ dưới tên cơ quan
+    # Đường kẻ dưới tên đơn vị ban hành (1/3 đến 1/2 độ dài)
     run_line_dv = p_cq.add_run('───────────\n')
     run_line_dv.font.size = Pt(8)
     run_line_dv.font.bold = True
@@ -138,7 +141,7 @@ def create_administrative_minutes(data: dict, output_path: str):
         run_so.font.size = Pt(12)
         run_so.font.italic = False
 
-    # Cột phải: Quốc hiệu & Tiêu ngữ
+    # Cột phải: Quốc hiệu & Tiêu ngữ & Địa danh
     p_qh = cell_right.paragraphs[0]
     p_qh.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_qh.paragraph_format.line_spacing = 1.15
@@ -156,7 +159,7 @@ def create_administrative_minutes(data: dict, output_path: str):
     run_line_tn.font.size = Pt(8)
     run_line_tn.font.bold = True
 
-    dia_diem_ngay = data.get('dia_diem_ngay', '').strip()
+    dia_diem_ngay = data.get('dia_diem_ngay', 'Cần Thơ, ngày ... tháng ... năm 20...').strip()
     if dia_diem_ngay:
         run_dd = p_qh.add_run(dia_diem_ngay)
         run_dd.font.size = Pt(13)
@@ -164,7 +167,7 @@ def create_administrative_minutes(data: dict, output_path: str):
 
     # Khoảng cách trước Tên biên bản
     p_space = doc.add_paragraph()
-    p_space.paragraph_format.space_before = Pt(10)
+    p_space.paragraph_format.space_before = Pt(8)
     p_space.paragraph_format.space_after = Pt(2)
 
     # 3. Tên loại văn bản & Trích yếu
@@ -175,11 +178,20 @@ def create_administrative_minutes(data: dict, output_path: str):
     run_title.font.size = Pt(14)
     run_title.font.bold = True
 
+    sub_title = data.get('sub_title', '').strip()
+    if sub_title:
+        p_st = doc.add_paragraph()
+        p_st.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_st.paragraph_format.space_after = Pt(2)
+        run_st = p_st.add_run(sub_title.upper())
+        run_st.font.size = Pt(13)
+        run_st.font.bold = True
+
     trich_yeu = data.get('trich_yeu', '').strip()
     if trich_yeu:
         p_sub = doc.add_paragraph()
         p_sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_sub.paragraph_format.space_after = Pt(14)
+        p_sub.paragraph_format.space_after = Pt(12)
         run_sub = p_sub.add_run(trich_yeu)
         run_sub.font.size = Pt(13)
         run_sub.font.bold = True
@@ -209,7 +221,7 @@ def create_administrative_minutes(data: dict, output_path: str):
                 p_cnt = doc.add_paragraph()
                 p_cnt.paragraph_format.line_spacing = 1.2
                 p_cnt.paragraph_format.space_after = Pt(4)
-                p_cnt.paragraph_format.first_line_indent = Inches(0.39) # 1cm
+                p_cnt.paragraph_format.first_line_indent = Inches(0.39) # thụt đầu dòng 1cm
                 
                 parts = re.split(r'(\*\*.*?\*\*)', line)
                 for part in parts:
@@ -276,56 +288,56 @@ def create_administrative_minutes(data: dict, output_path: str):
         run_kt.font.size = Pt(13)
         run_kt.font.italic = True
 
-    # 6. Khối Chữ ký (Thư ký bên trái, Chủ tọa bên phải)
-    sign_table = doc.add_table(rows=1, cols=2)
+    # 6. Khối Chữ ký (Hỗ trợ 2 cột hoặc 3 cột)
+    signatures = data.get('signatures', None)
+    if not signatures:
+        # Mặc định 2 người ký (Thư ký & Chủ trì/Trưởng bộ môn)
+        signatures = [
+            {
+                'role': data.get('chuc_danh_thu_ky', 'THƯ KÝ CUỘC HỌP'),
+                'sub': '(Ký và ghi rõ họ tên)',
+                'name': data.get('ten_thu_ky', 'KTV. Nguyễn Phúc Duy')
+            },
+            {
+                'role': data.get('chuc_danh_chu_tri', 'CHỦ TRÌ CUỘC HỌP / TRƯỞNG BỘ MÔN'),
+                'sub': '(Ký và ghi rõ họ tên)',
+                'name': data.get('ten_chu_tri', 'TS.BS. Nguyễn Hồng Phong')
+            }
+        ]
+
+    cols_count = len(signatures)
+    sign_table = doc.add_table(rows=1, cols=cols_count)
     sign_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     remove_table_borders(sign_table)
 
-    s_left = sign_table.cell(0, 0)
-    s_right = sign_table.cell(0, 1)
-    s_left.width = Inches(3.1)
-    s_right.width = Inches(3.2)
-
-    # Thư ký
-    p_sl = s_left.paragraphs[0]
-    p_sl.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_sl.paragraph_format.line_spacing = 1.15
-    run_thu_ky = p_sl.add_run('THƯ KÝ CUỘC HỌP\n')
-    run_thu_ky.font.size = Pt(13)
-    run_thu_ky.font.bold = True
-    run_tk_sub = p_sl.add_run('(Ký và ghi rõ họ tên)\n\n\n\n\n')
-    run_tk_sub.font.size = Pt(11)
-    run_tk_sub.font.italic = True
-
-    ten_thu_ky = data.get('ten_thu_ky', '')
-    if ten_thu_ky:
-        run_tk_name = p_sl.add_run(ten_thu_ky)
-        run_tk_name.font.size = Pt(13)
-        run_tk_name.font.bold = True
-
-    # Chủ trì / Chủ tọa
-    p_sr = s_right.paragraphs[0]
-    p_sr.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_sr.paragraph_format.line_spacing = 1.15
-    chuc_danh_chu_tri = data.get('chuc_danh_chu_tri', 'CHỦ TỌA / CHỦ TRÌ').upper()
-    run_ct = p_sr.add_run(chuc_danh_chu_tri + '\n')
-    run_ct.font.size = Pt(13)
-    run_ct.font.bold = True
-    run_ct_sub = p_sr.add_run('(Ký và ghi rõ họ tên)\n\n\n\n\n')
-    run_ct_sub.font.size = Pt(11)
-    run_ct_sub.font.italic = True
-
-    ten_chu_tri = data.get('ten_chu_tri', '')
-    if ten_chu_tri:
-        run_ct_name = p_sr.add_run(ten_chu_tri)
-        run_ct_name.font.size = Pt(13)
-        run_ct_name.font.bold = True
+    col_width = Inches(6.3 / cols_count)
+    for idx, sig in enumerate(signatures):
+        cell = sign_table.cell(0, idx)
+        cell.width = col_width
+        p_sig = cell.paragraphs[0]
+        p_sig.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_sig.paragraph_format.line_spacing = 1.15
+        
+        # Chức danh
+        r_role = p_sig.add_run(sig.get('role', '').upper() + '\n')
+        r_role.font.size = Pt(12 if cols_count == 3 else 13)
+        r_role.font.bold = True
+        
+        # Hướng dẫn ký
+        r_sub = p_sig.add_run(sig.get('sub', '(Ký và ghi rõ họ tên)') + '\n\n\n\n\n')
+        r_sub.font.size = Pt(11)
+        r_sub.font.italic = True
+        
+        # Họ và tên
+        r_name = p_sig.add_run(sig.get('name', ''))
+        r_name.font.size = Pt(12 if cols_count == 3 else 13)
+        r_name.font.bold = True
 
     # 7. Nơi nhận (nếu có)
     noi_nhan = data.get('noi_nhan', [])
     if noi_nhan:
         p_nn_title = doc.add_paragraph()
-        p_nn_title.paragraph_format.space_before = Pt(18)
+        p_nn_title.paragraph_format.space_before = Pt(14)
         p_nn_title.paragraph_format.space_after = Pt(2)
         run_nn = p_nn_title.add_run('Nơi nhận:\n')
         run_nn.font.size = Pt(11)
@@ -346,7 +358,7 @@ def create_administrative_minutes(data: dict, output_path: str):
     return str(output_p.resolve())
 
 def main():
-    parser = argparse.ArgumentParser(description="Xuất biên bản cuộc họp ra file docx chuẩn hành chính")
+    parser = argparse.ArgumentParser(description="Xuất biên bản cuộc họp ra file docx chuẩn hành chính ĐHYD Cần Thơ & NĐ 30")
     parser.add_argument("--json", dest="json_path", help="Đường dẫn file dữ liệu JSON của biên bản")
     parser.add_argument("--out", dest="output_path", default="output_bien_ban.docx", help="Đường dẫn file .docx đầu ra")
     args = parser.parse_args()
@@ -357,59 +369,78 @@ def main():
         saved = create_administrative_minutes(data, args.output_path)
         print(f"[OK] Xuat bien ban thanh cong: {saved}")
     else:
-        # Dữ liệu mặc định mẫu để kiểm tra
+        # Dữ liệu mặc định mẫu: Cuộc họp Bộ môn Mô phôi - GPB - Pháp Y (Trường ĐHYD Cần Thơ)
         sample_data = {
-            'co_quan_chu_quan': 'BỆNH VIỆN ĐA KHOA',
-            'ten_don_vi': 'KHOA GIẢI PHẪU BỆNH',
-            'so_bien_ban': '01/BB-KGPB',
-            'dia_diem_ngay': 'Hà Nội, ngày 07 tháng 11 năm 2026',
-            'trich_yeu': 'Cuộc họp giao ban chuyên môn định kỳ và triển khai nhiệm vụ công tác',
+            'co_quan_chu_quan': 'TRƯỜNG ĐẠI HỌC Y DƯỢC CẦN THƠ',
+            'ten_khoa': 'KHOA Y',
+            'ten_don_vi': 'BỘ MÔN MÔ PHÔI - GIẢI PHẪU BỆNH - PHÁP Y',
+            'so_bien_ban': '15/BB-BMMPGPBPY',
+            'dia_diem_ngay': 'Cần Thơ, ngày 07 tháng 11 năm 2026',
+            'sub_title': 'CUỘC HỌP BỘ MÔN',
+            'trich_yeu': 'V/v Giao ban chuyên môn định kỳ và triển khai kế hoạch thực tập mô học học kỳ 1',
             'sections': [
                 {
                     'title': 'I. THỜI GIAN VÀ ĐỊA ĐIỂM',
                     'items': [
-                        '- **Thời gian:** 08 giờ 30 phút ngày 07/11/2026.',
-                        '- **Địa điểm:** Văn phòng Khoa Giải phẫu bệnh.'
+                        '- **Thời gian bắt đầu:** 08 giờ 30 phút, ngày 07 tháng 11 năm 2026.',
+                        '- **Địa điểm:** Văn phòng Bộ môn Mô phôi - Giải phẫu bệnh - Pháp Y (Khoa Y, Trường ĐHYD Cần Thơ).',
+                        '- **Hình thức họp:** Trực tiếp.'
                     ]
                 },
                 {
                     'title': 'II. THÀNH PHẦN THAM DỰ',
                     'items': [
-                        '- **Chủ tọa:** BS.CKII. Trần Văn A - Trưởng khoa.',
-                        '- **Thư ký:** KTV. Nguyễn Phúc Duy - Kỹ thuật viên GPB.',
-                        '- **Số lượng tham dự:** 12/12 cán bộ, nhân viên có mặt đầy đủ.'
+                        '- **Chủ trì:** TS.BS. Nguyễn Hồng Phong – Trưởng Bộ môn.',
+                        '- **Thư ký:** KTV. Nguyễn Phúc Duy – Kỹ thuật viên Bộ môn.',
+                        '- **Thành viên có mặt:** 08/08 cán bộ, giảng viên, kỹ thuật viên trong Bộ môn (100%).',
+                        '- **Vắng mặt:** 0.'
                     ]
                 },
                 {
-                    'title': 'III. NỘI DUNG VÀ DIỄN BIẾN CUỘC HỌP',
-                    'content': 'Đồng chí Chủ tọa thông qua chương trình làm việc. Các bộ phận báo cáo tình hình hoạt động chuyên môn, tiến độ thực hiện kỹ thuật mô học, hóa mô miễn dịch và giải pháp khắc phục khó khăn.'
+                    'title': 'III. NỘI DUNG CUỘC HỌP',
+                    'items': [
+                        '1. **Đánh giá hoạt động chuyên môn và đào tạo:** Tiến độ giảng dạy lý thuyết và thực hành giải phẫu bệnh cho các lớp Y đa khoa, Răng Hàm Mặt diễn ra đúng kế hoạch. Hệ thống kính hiển vi thực tập được bảo dưỡng tốt.',
+                        '2. **Tình hình vận hành Labo và vật tư:** KTV. Duy báo cáo hệ thống máy đúc mô và máy cắt Microtome hoạt động ổn định. Đã kiểm nhập đợt hóa chất cồn, formalin, xylen và parafin đủ dùng cho quý 4/2026.',
+                        '3. **Nghiên cứu khoa học và phát triển kỹ thuật:** Thảo luận triển khai số hóa tiêu bản (WSI) phục vụ ngân hàng dữ liệu mô học trực tuyến.'
+                    ]
                 },
                 {
-                    'title': 'IV. KẾT LUẬN CỦA CHỦ TỌA',
+                    'title': 'IV. KẾT LUẬN CỦA CHỦ TRÌ (TRƯỞNG BỘ MÔN)',
                     'items': [
-                        '- Toàn thể cán bộ tuân thủ nghiêm ngặt quy trình kiểm soát chất lượng (QA/QC).',
-                        '- Phân công các đầu việc cụ thể theo bảng bên dưới.'
+                        '- TS.BS. Nguyễn Hồng Phong biểu dương tinh thần làm việc của toàn thể viên chức.',
+                        '- Yêu cầu chuẩn bị chu đáo bộ tiêu bản mẫu cho đợt thi kết thúc học phần thực hành sắp tới.',
+                        '- **Phân công nhiệm vụ cụ thể (Action Items):**'
                     ],
                     'table': [
-                        ['STT', 'Nội dung công việc', 'Người thực hiện', 'Người phối hợp', 'Thời hạn'],
-                        ['1', 'Rà soát quy trình nhuộm HE', 'KTV. Nguyễn Phúc Duy', 'Tổ Cắt nhuộm', '12/11/2026'],
-                        ['2', 'Kiểm kê kho hóa chất, sinh phẩm', 'KTV. Lê Thị B', 'Kho Dược', '15/11/2026']
+                        ['STT', 'Nội dung nhiệm vụ', 'Người thực hiện', 'Người/Đơn vị phối hợp', 'Thời hạn'],
+                        ['1', 'Rà soát và chuẩn bị bộ lam kính thực hành', 'KTV. Nguyễn Phúc Duy', 'Giảng viên hướng dẫn', '12/11/2026'],
+                        ['2', 'Kiểm tra nồng độ formalin và an toàn phòng Lab', 'KTV. Nguyễn Phúc Duy', 'Tổ Hóa chất', '10/11/2026'],
+                        ['3', 'Tổng hợp lịch thi thực tập và danh sách sinh viên', 'Thư ký giáo vụ', 'Phòng Đào tạo Đại học', '15/11/2026']
                     ]
                 }
             ],
-            'ket_thuc': 'Cuộc họp kết thúc hồi 10 giờ 30 phút cùng ngày. Biên bản đã được thông qua và nhất trí hoàn toàn.',
-            'chuc_danh_chu_tri': 'TRƯỞNG KHOA',
-            'ten_chu_tri': 'BS.CKII. Trần Văn A',
-            'ten_thu_ky': 'KTV. Nguyễn Phúc Duy',
+            'ket_thuc': 'Cuộc họp kết thúc vào lúc 10 giờ 30 phút cùng ngày. Biên bản đã được thông qua toàn thể cuộc họp và thống nhất lưu hồ sơ./.',
+            'signatures': [
+                {
+                    'role': 'THƯ KÝ CUỘC HỌP',
+                    'sub': '(Ký và ghi rõ họ tên)',
+                    'name': 'KTV. Nguyễn Phúc Duy'
+                },
+                {
+                    'role': 'CHỦ TRÌ CUỘC HỌP / TRƯỞNG BỘ MÔN',
+                    'sub': '(Ký và ghi rõ họ tên)',
+                    'name': 'TS.BS. Nguyễn Hồng Phong'
+                }
+            ],
             'noi_nhan': [
-                'Ban Giám đốc (để báo cáo);',
-                'Các bộ phận trong khoa;',
-                'Lưu: VT, Hồ sơ họp.'
+                'Như thành phần tham dự;',
+                'Ban Chủ nhiệm Khoa Y (để b/c);',
+                'Lưu: BM, hồ sơ.'
             ]
         }
         target_path = os.path.join(os.path.dirname(__file__), "..", "examples", "sample_output.docx")
         saved = create_administrative_minutes(sample_data, target_path)
-        print(f"[OK] Mau bien ban docx da duoc tao: {saved}")
+        print(f"[OK] Mau bien ban docx DH Y Duoc Can Tho da duoc tao: {saved}")
 
 if __name__ == '__main__':
     main()

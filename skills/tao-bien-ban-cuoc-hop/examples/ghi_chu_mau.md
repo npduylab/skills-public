@@ -1,26 +1,28 @@
-# GHI CHÚ CUỘC HỌP (DỮ LIỆU ĐẦU VÀO THÔ)
+# GHI CHÚ CUỘC HỌP BỘ MÔN (DỮ LIỆU ĐẦU VÀO THÔ)
 
-- Cuộc họp: Giao ban định kỳ tuần đầu tháng 11 Khoa Giải phẫu bệnh
-- Thời gian: Sáng thứ Sáu, 07/11/2026, từ 8h30 đến 10h15
-- Địa điểm: Phòng giao ban Khoa GPB, Bệnh viện Đa khoa tỉnh
-- Chủ trì: BS.CKII. Trần Văn A (Trưởng khoa)
-- Thư ký ghi chép: KTV. Nguyễn Phúc Duy
-- Tham dự: Toàn bộ nhân viên trong khoa (12 người, có mặt đủ, không ai vắng)
+- Cuộc họp: Giao ban chuyên môn định kỳ và chuẩn bị kỳ thi thực tập Mô học - GPB học kỳ 1
+- Thời gian: Sáng thứ Sáu, ngày 07/11/2026, từ 08h30 đến 10h30
+- Địa điểm: Văn phòng Bộ môn Mô phôi - Giải phẫu bệnh - Pháp Y, Khoa Y, Trường Đại học Y Dược Cần Thơ
+- Chủ trì: TS.BS. Nguyễn Hồng Phong – Trưởng Bộ môn
+- Thư ký: KTV. Nguyễn Phúc Duy – Kỹ thuật viên Bộ môn
+- Thành phần: Đầy đủ 08/08 cán bộ, giảng viên, kỹ thuật viên Bộ môn có mặt
 
 Nội dung trao đổi:
-1. Sếp A mở đầu điểm qua công việc tuần qua:
-- Khối lượng xét nghiệm sinh thiết tăng 15% so với tuần trước (150 ca mô bệnh học thường quy).
-- Nhuộm IHC thực hiện 45 ca, trả kết quả đúng hạn cho các khoa lâm sàng (đặc biệt là Khoa Ung bướu và Ngoại).
-- Đánh giá chất lượng lát cắt và độ bám dính mô trên lam kính tích điện đã cải thiện tốt, hiện tượng trôi mô giảm về mức 0%.
+1. Sếp Phong (Trưởng BM) đánh giá tình hình giảng dạy:
+- Các lớp Y đa khoa, Răng Hàm Mặt, Y học cổ truyền đã hoàn thành 80% thời lượng giảng dạy lý thuyết và thực hành học kỳ 1.
+- Kính hiển vi quang học và hệ thống màn hình truyền hình ảnh tại các phòng thực hành hoạt động ổn định.
 
-2. Ý kiến các bên:
-- BS. C phản ánh: Có 2 mẫu bệnh phẩm từ phòng mổ gửi xuống dung dịch formol pha chưa đủ tỷ lệ 10% đệm trung tính, cần nhắc nhở điều dưỡng phòng mổ.
-- KTV. Duy báo cáo: Hệ thống quét lát cắt tự động (WSI - Whole Slide Imaging) đã chạy thử nghiệm ổn định được 50 lam, tốc độ quét trung bình 2 phút/lam ở độ phóng đại 40x. Đang chuẩn bị tích hợp dữ liệu hình ảnh vào hệ thống quản lý LIS.
-- KTV. B (Tổ Hóa chất): Đợt hóa chất kháng thể mới (CK7, CK20, TTF-1, Ki-67) đã về kho, đã thực hiện chạy chứng dương đạt chuẩn CAP.
+2. Báo cáo tình hình Labo xét nghiệm và hóa chất:
+- KTV. Duy báo cáo: Hệ thống máy đúc mô và máy cắt Microtome hoạt động tốt. Đợt kiểm nhập hóa chất tiêu hao (formalin, cồn, xylen, parafin) tuần qua đã hoàn tất đầy đủ theo phiếu giao nhận BM06, đủ dự trữ cho quý 4/2026.
+- Đang thử nghiệm quét số hóa tiêu bản (WSI) để chuẩn bị ngân hàng câu hỏi thi thực hành dạng trực tuyến.
 
-3. Sếp A kết luận chỉ đạo:
-- Biểu dương tinh thần làm việc của toàn thể khoa, duy trì chỉ số TAT (Turnaround Time) dưới 72 giờ cho sinh thiết thường quy.
-- Về bệnh phẩm phòng mổ: Giao BS. C soạn công văn ngắn gửi Điều dưỡng trưởng khối Ngoại để tái huấn luyện quy cách cố định bệnh phẩm ngay tại phòng mổ.
-- Về hệ thống WSI: Giao KTV. Duy tiếp tục hoàn thiện tài liệu SOP (Quy trình thao tác chuẩn) vận hành máy quét WSI, phối hợp với phòng CNTT hoàn thành trước 15/11/2026.
-- Về quản lý chất lượng: KTV. B phối hợp KTV. Duy cập nhật sổ tay kiểm tra chứng dương/chứng âm IHC theo đúng chuẩn ISO 15189, hạn chót 12/11/2026.
-- Kết thúc: Cuộc họp xong lúc 10h15, mọi người đồng ý hết, Duy làm biên bản lưu hồ sơ.
+3. Ý kiến thảo luận:
+- Giảng viên phụ trách thực hành đề nghị rà soát lại các bộ lam kính giảng dạy bệnh học dạ dày, gan, hạch và các khối u ác tính để loại bỏ lam bị phai màu hoặc bong mô.
+- KTV. Duy lưu ý cần bổ sung kịp thời dung dịch đệm formalin trung tính 10% tại các bồn cố định mẫu mô thực tập.
+
+4. Thầy Phong kết luận chỉ đạo:
+- Biểu dương tinh thần làm việc và sự chuẩn bị kỹ lưỡng của đội ngũ kỹ thuật viên.
+- Thống nhất phân công:
+  + KTV. Nguyễn Phúc Duy: Rà soát, thay thế và chuẩn bị hoàn chỉnh 50 bộ lam kính phục vụ kỳ thi thực hành trước ngày 12/11/2026; kiểm tra nồng độ formalin và an toàn phòng Lab trước ngày 10/11/2026.
+  + Thư ký giáo vụ: Phối hợp Phòng Đào tạo Đại học chốt lịch thi và danh sách sinh viên trước ngày 15/11/2026.
+- Kết thúc: Cuộc họp bế mạc lúc 10h30. Duy lập biên bản lưu hồ sơ bộ môn và gửi báo cáo Ban Chủ nhiệm Khoa Y.
