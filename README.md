@@ -9,6 +9,7 @@ Kho lưu trữ các bộ kỹ năng (Skills) chuyên biệt dành cho **AI Codin
 | Kỹ năng | Phiên bản | Mô tả tóm tắt | Quy chuẩn tích hợp | Nền tảng hỗ trợ |
 | :--- | :---: | :--- | :--- | :--- |
 | [`tao-bien-ban-cuoc-hop`](./skills/tao-bien-ban-cuoc-hop/SKILL.md) | `1.1.0` | Tự động chuyển đổi ghi chép thô thành **Biên bản cuộc họp chính thức** chuẩn thể thức hành chính. Hỗ trợ xuất đồng thời Markdown (.md) và Word (.docx). | **Đại học Y Dược Cần Thơ** (QĐ 1488/QĐ-ĐHYDCT & QĐ 1494/QĐ-ĐHYDCT), **Nghị định 30/2020/NĐ-CP** | Antigravity, Claude Code, Cursor, Codex |
+| [`soan-thao-van-ban`](./skills/soan-thao-van-ban/SKILL.md) | `1.0.0` | Quy trình và bộ **22 biểu mẫu chuẩn** để soạn thảo công văn, quyết định, nghị quyết, quy chế, thông báo, kế hoạch, báo cáo, tờ trình, biên bản, giấy mời, giấy nghỉ phép... và xuất Word (`.docx`). | **Nghị định 30/2020/NĐ-CP**, **QĐ 1488/QĐ-ĐHYDCT** (12 mẫu hành chính) & **QĐ 1494/QĐ-ĐHYDCT** (10 mẫu VBQLNB) | Antigravity, Claude Code, Cursor, Codex |
 
 ---
 
@@ -42,6 +43,33 @@ skills/tao-bien-ban-cuoc-hop/
     ├── ghi_chu_mau.md                       # Dữ liệu ghi chú mẫu đầu vào (Giao ban Bộ môn Mô phôi - GPB - Pháp Y)
     ├── bien_ban_chuan_mau.md                # Biên bản hoàn chỉnh mẫu đầu ra (.md)
     └── sample_output.docx                   # File Word thành phẩm mẫu (.docx)
+```
+
+---
+
+## 📌 Chi tiết Kỹ năng: `soan-thao-van-ban` (Phiên bản 1.0.0)
+
+### 1. Giới thiệu
+Bộ kỹ năng toàn diện cho phép AI Agent tiếp nhận yêu cầu soạn thảo, rà soát thể thức, chủ động hỏi lại thông tin còn thiếu và xuất file Word (`.docx`) chuẩn hành chính & quản lý nội bộ theo:
+- **Nghị định 30/2020/NĐ-CP** về công tác văn thư.
+- **Quyết định số 1488/QĐ-ĐHYDCT** (12 biểu mẫu hành chính: Mẫu 1 → Mẫu 11).
+- **Quyết định số 1494/QĐ-ĐHYDCT** (10 biểu mẫu văn bản quản lý nội bộ: Mẫu VP.VBQLNB.01 → 10).
+- Kèm script Python [`generate_docx.py`](./skills/soan-thao-van-ban/scripts/generate_docx.py) không cần thư viện ngoài (pure Python stdlib) và 22 tệp `.docx` mẫu gốc.
+
+### 2. Cấu trúc thư mục kỹ năng
+```text
+skills/soan-thao-van-ban/
+├── SKILL.md                                 # Hướng dẫn quy trình 5 bước thực hiện cho Agent
+├── scripts/
+│   └── generate_docx.py                     # Script Python tạo file Word (.docx) chuẩn A4, NĐ 30
+├── references/
+│   ├── the-thuc-va-ky-thuat.md              # Quy chuẩn khổ giấy, lề, font, 14 thành phần thể thức
+│   ├── quy-tac-viet-hoa-va-viet-tat.md      # Quy tắc viết hoa, viết tắt 25 loại VB & ký hiệu đơn vị
+│   ├── bieu-mau-hanh-chinh.md               # Chi tiết 12 mẫu hành chính (QĐ 1488/QĐ-ĐHYDCT)
+│   └── bieu-mau-quan-ly-noi-bo.md           # Chi tiết 10 mẫu VBQLNB (QĐ 1494/QĐ-ĐHYDCT)
+└── resources/
+    ├── 01-quan-ly-noi-bo-qd1494/            # 10 tệp .docx biểu mẫu VBQLNB chuẩn (VP.VBQLNB.01 → 10)
+    └── 02-hanh-chinh-qd1488/                # 12 tệp .docx biểu mẫu hành chính chuẩn (Mẫu 1 → 11)
 ```
 
 ---
