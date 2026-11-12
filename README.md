@@ -1,6 +1,8 @@
-# NPDUYLAB AI Agent Skills Collection 🚀
+# NPDUYLAB Public AI Agent Skills Collection 🚀
 
-Kho lưu trữ các bộ kỹ năng (Skills) chuyên biệt dành cho **AI Coding Assistants & Autonomous Agents** (Google Antigravity, Claude Code, Cursor, Codex...), được phát triển và tối ưu bởi **Nguyễn Phúc Duy (NPDUYLAB)**.
+Kho lưu trữ **Công khai (Public)** các bộ kỹ năng (Skills) dùng chung dành cho **AI Coding Assistants & Autonomous Agents** (Google Antigravity, Claude Code, Cursor, Codex...), được phát triển và tối ưu bởi **Nguyễn Phúc Duy (NPDUYLAB)**.
+
+> 📌 *Các kỹ năng đặc thù nội bộ đơn vị và cấu hình cá nhân được quản lý tách biệt tại kho riêng tư (`skills-private`).*
 
 ---
 
@@ -10,6 +12,8 @@ Kho lưu trữ các bộ kỹ năng (Skills) chuyên biệt dành cho **AI Codin
 | :--- | :---: | :--- | :--- | :--- |
 | [`tao-bien-ban-cuoc-hop`](./skills/tao-bien-ban-cuoc-hop/SKILL.md) | `1.1.0` | Tự động chuyển đổi ghi chép thô thành **Biên bản cuộc họp chính thức** chuẩn thể thức hành chính. Hỗ trợ xuất đồng thời Markdown (.md) và Word (.docx). | **Đại học Y Dược Cần Thơ** (QĐ 1488/QĐ-ĐHYDCT & QĐ 1494/QĐ-ĐHYDCT), **Nghị định 30/2020/NĐ-CP** | Antigravity, Claude Code, Cursor, Codex |
 | [`soan-thao-van-ban`](./skills/soan-thao-van-ban/SKILL.md) | `1.0.0` | Quy trình và bộ **22 biểu mẫu chuẩn** để soạn thảo công văn, quyết định, nghị quyết, quy chế, thông báo, kế hoạch, báo cáo, tờ trình, biên bản, giấy mời, giấy nghỉ phép... và xuất Word (`.docx`). | **Nghị định 30/2020/NĐ-CP**, **QĐ 1488/QĐ-ĐHYDCT** (12 mẫu hành chính) & **QĐ 1494/QĐ-ĐHYDCT** (10 mẫu VBQLNB) | Antigravity, Claude Code, Cursor, Codex |
+| [`doc-van-ban-markitdown`](./skills/doc-van-ban-markitdown/SKILL.md) | `1.0.0` | Đọc và chuyển đổi tài liệu văn phòng (`.docx`, `.xlsx`, `.pptx`, `.pdf`, `.html`, `.zip`...) sang Markdown bằng **Microsoft MarkItDown** chuẩn UTF-8 trên Windows. | **Microsoft MarkItDown** (`markitdown[all]`), UTF-8 Windows PowerShell | Antigravity, Claude Code, Cursor, Codex |
+| [`luu-kho-git`](./skills/luu-kho-git/SKILL.md) | `2.0.0` | Quy trình chuẩn hóa phân loại **Public/Private**, đồng bộ đa điểm qua Hub trung tâm (`d:\Antigravity_system`), rà soát rò rỉ bí mật và commit/push lên GitHub bằng `git` & `gh`. | **GitHub CLI (`gh`)**, quy trình 2 kho `skills-public` & `skills-private` | Antigravity, Claude Code, Cursor, Codex |
 
 ---
 
